@@ -22,13 +22,15 @@ const send = async (url) => {
       break
     }
     case 'release': {
-      const { repo } = github.context.repo
-      const tag = github.context.payload.release.tag_name
-      const author = github.context.actor
-      const htmlUrl = github.context.payload.release.html_url
+      if (!github.context.payload.release.prerelease) {
+          const { repo } = github.context.repo
+          const tag = github.context.payload.release.tag_name
+          const author = github.context.actor
+          const htmlUrl = github.context.payload.release.html_url
 
-      const body = newRelease(repo, tag, author, htmlUrl)
-      await post(axiosInstance, url, body)
+          const body = newRelease(repo, tag, author, htmlUrl)
+          await post(axiosInstance, url, body)
+      }
       break
     }
     default:
