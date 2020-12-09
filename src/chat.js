@@ -1,6 +1,6 @@
 const github = require('@actions/github')
 const { newAxios } = require('./axios')
-const { newPullRequest, newRelease } = require('./messages')
+const { newPullRequest, newRelease, newCommit } = require('./messages')
 
 /**
  * Send Google Chat message.
