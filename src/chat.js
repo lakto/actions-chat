@@ -11,6 +11,16 @@ const send = async (url) => {
   const axiosInstance = newAxios(url)
 
   switch (github.context.eventName) {
+    case 'push': {
+      const { repo } = github.context.repo
+      const title = 'New commit'
+      const author = github.context.actor
+      const htmlUrl = ''
+
+      const body = newPullRequest(repo, title, author, htmlUrl)
+      await post(axiosInstance, url, body)
+      break
+    }
     case 'pull_request': {
       const { repo } = github.context.repo
       const title = github.context.payload.pull_request.title
