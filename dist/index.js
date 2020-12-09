@@ -3118,7 +3118,7 @@ module.exports = {
 
 const github = __webpack_require__(469)
 const { newAxios } = __webpack_require__(836)
-const { newPullRequest, newRelease } = __webpack_require__(573)
+const { newPullRequest, newRelease, newCommit } = __webpack_require__(573)
 
 /**
  * Send Google Chat message.
@@ -3131,11 +3131,11 @@ const send = async (url) => {
   switch (github.context.eventName) {
     case 'push': {
       const { repo } = github.context.repo
-      const title = 'New commit'
+      const title = github.context.eventName
       const author = github.context.actor
-      const htmlUrl = ''
+      const htmlUrl = github.context.payload.repository.html_url
 
-      const body = newPullRequest(repo, title, author, htmlUrl)
+      const body = newCommit(repo, title, author, htmlUrl)
       await post(axiosInstance, url, body)
       break
     }
@@ -9947,7 +9947,73 @@ const newRelease = (repo, tag, author, htmlUrl) => {
   return body
 }
 
-module.exports = { newPullRequest, newRelease }
+/**
+ * Build body of Google Chat card for new pull requests.
+ *
+ * @param {string} repo - Pull request repository
+ * @param {string} title - Pull request title
+ * @param {string} author - GitHub author username
+ * @param {string} htmlUrl - Pull request GitHub Url
+ *
+ * @returns {object} Google Chat card body
+ */
+const newCommit = (repo, title, author, htmlUrl) => {
+  const body = {
+    cards: [
+      {
+        header: {
+          title: 'New commit',
+          imageUrl: 'https://vectorified.com/images/git-icon-3.png'
+        },
+        sections: [
+          {
+            widgets: [
+              {
+                keyValue: {
+                  topLabel: 'Repository',
+                  content: repo
+                }
+              },
+              {
+                keyValue: {
+                  topLabel: 'Type',
+                  content: title
+                }
+              },
+              {
+                keyValue: {
+                  topLabel: 'Author',
+                  content: author
+                }
+              }
+            ]
+          },
+          {
+            widgets: [
+              {
+                buttons: [
+                  {
+                    textButton: {
+                      text: 'OPEN',
+                      onClick: {
+                        openLink: {
+                          url: htmlUrl
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  return body
+}
+
+module.exports = { newPullRequest, newRelease, newCommit }
 
 
 /***/ }),
