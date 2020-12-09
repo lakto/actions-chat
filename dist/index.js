@@ -3099,7 +3099,7 @@ const send = async (url) => {
       break
     }
     default:
-      throw new Error('Sorry, we don\'t accept this event type yet.')
+      throw new Error('Sorry, we don\'t accept this event type yet: ' + github.context.eventName)
   }
 }
 
