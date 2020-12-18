@@ -1,6 +1,6 @@
 # google-chat-action
 
-Forked from @elivery-much/actions-chat
+Forked from [@delivery-much/actions-chat](https://github.com/delivery-much/actions-chat)
 
 Messages are sent by [chat.js](src/chat.js) and defined in [messages.js](src/messages.js).
 
